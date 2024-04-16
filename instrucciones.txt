@@ -1,0 +1,9 @@
+cd C:\hlocal\retrieval-augmented-generation-master
+conda activate tfg
+streamlit run app.py
+
+conda env create --name tfg -f environment.yaml --force
+conda env update --name tfg --file environment.yaml --prune
+
+PROBABLEMENTE VERSIÓN A INSTALAR
+pyaudio-0.2.14
