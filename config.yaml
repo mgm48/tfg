@@ -1,46 +1,47 @@
 DEVICE: cpu
 
-TEXT_SPLIT_MODE: simple
-
-CHUNK_SIZE: 500
-CHUNK_OVERLAP: 50
-SEPARATORS: ["\n\n", "\n", ". ", " ", ""]
-
-VECTORDB_TYPE: faiss
-VECTORDB_PATH: vectordb_faiss
-# VECTORDB_TYPE: chroma
-# VECTORDB_PATH: vectordb_chroma
-
-PARENT_DOCS_PATH: ./data/parent_docs.pkl
+TEXT_SPLIT_MODE: default  # default or propositionize
+# propositionize uses propositionizer model
 
 MODELS_DIR: ./models
 
 EMBEDDINGS_PATH: all-MiniLM-L6-v2
 # EMBEDDINGS_PATH: bge-small-en-v1.5
 
+# VECTORDB_TYPE: faiss
+# VECTORDB_PATH: vectordb/faiss
+VECTORDB_TYPE: chroma
+VECTORDB_PATH: vectordb/chroma
+
+# USE_CTRANSFORMERS: True
 # LLM_PATH: llama-2-7b-chat.Q4_K_M.gguf
-# LLM_TYPE: llama
 # PROMPT_TYPE: llama
+
+USE_CTRANSFORMERS: True
 LLM_PATH: mistral-7b-instruct-v0.2.Q4_K_M.gguf
-LLM_TYPE: mistral
 PROMPT_TYPE: mistral
-#LLM_PATH: zephyr-7b-beta.Q4_K_M.gguf
-#LLM_TYPE: mistral
-#PROMPT_TYPE: zephyr
+
+# USE_CTRANSFORMERS: True
+# LLM_PATH: zephyr-7b-beta.Q4_K_M.gguf
+# PROMPT_TYPE: zephyr
+
+# USE_CTRANSFORMERS: False
+# LLM_PATH: gemma-2b-it-q4_k_m.gguf
+# PROMPT_TYPE: gemma
 
 LLM_CONFIG:
   MAX_NEW_TOKENS: 512
   TEMPERATURE: 0.2
   REPETITION_PENALTY: 1.1
-  CONTEXT_LENGTH: 2048
+  CONTEXT_LENGTH: 4000
 
 BASE_RETRIEVER_CONFIG:
   SEARCH_K: 4
 
-RERANKER_PATH: tart-full-flan-t5-xl
-RERANKER_TYPE: tart
-#RERANKER_PATH: bge-reranker-base
-#RERANKER_TYPE: bge
+# RERANKER_PATH: tart-full-flan-t5-xl
+# RERANKER_TYPE: tart
+RERANKER_PATH: bge-reranker-base
+RERANKER_TYPE: bge
 
 RERANK_RETRIEVER_CONFIG:
   SEARCH_K: 10

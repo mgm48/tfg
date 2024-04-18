@@ -14,12 +14,19 @@ zephyr_format = """<|system|>
 {user}</s>
 <|assistant|>"""
 
+gemma_format = """<start_of_turn>user
+{system}
+{user}<end_of_turn>
+<start_of_turn>model"""
+
 
 if CFG.PROMPT_TYPE == "llama":
     _chat_format = llama_format
 elif CFG.PROMPT_TYPE == "mistral":
     _chat_format = mistral_format
 elif CFG.PROMPT_TYPE == "zephyr":
+    _chat_format = zephyr_format
+elif CFG.PROMPT_TYPE == "gemma":
     _chat_format = zephyr_format
 else:
     raise NotImplementedError
