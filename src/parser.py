@@ -17,9 +17,9 @@ from src import CFG
 
 def load_pdf(filename: str) -> Sequence:
     """Loads pdf."""
-    # from langchain_community.document_loaders.pdf import PyMuPDFLoader
-    # return PyMuPDFLoader(filename).load()
-    return partition_pdf(filename, strategy="fast")
+    from langchain_community.document_loaders.pdf import PyMuPDFLoader
+    return PyMuPDFLoader(filename).load()
+    #return partition_pdf(filename, strategy="fast")
 
 
 def text_split(elements: Sequence[Element]) -> Sequence[Document]:

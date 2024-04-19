@@ -14,7 +14,7 @@ from langchain_community.vectorstores.chroma import Chroma
 from langchain_community.vectorstores.faiss import FAISS
 
 from src import CFG, logger
-from src.parser import load_pdf, text_split, propositionize
+from src.parser import load_pdf, text_split, propositionize, simple_text_split
 
 
 def build_vectordb(filename: str, embedding_function: Embeddings) -> None:
@@ -22,7 +22,8 @@ def build_vectordb(filename: str, embedding_function: Embeddings) -> None:
     parts = load_pdf(filename)
 
     if CFG.TEXT_SPLIT_MODE == "default":
-        docs = text_split(parts)
+        #docs = text_split(parts)
+        docs = simple_text_split(parts, CFG.CHUNK_SIZE, CFG.CHUNK_OVERLAP)
         save_vectordb(docs, embedding_function, CFG.VECTORDB_PATH, CFG.VECTORDB_TYPE)
     elif CFG.TEXT_SPLIT_MODE == "propositionize":
         docs = propositionize(parts)

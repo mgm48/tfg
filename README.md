@@ -5,6 +5,12 @@ conda activate tfg
 streamlit run app_name.py
 ```
 
+```bash
+conda env create --name rag python=3.11
+conda activate rag
+pip install -r requirements.txt
+```
+
 ## INSTRUCCIONES PARA EJECUCIÓN:
 
 ### CONDA ENVIRONMENT:
