@@ -43,10 +43,10 @@ if 'texto' not in st.session_state:
 
 def init_chat_history():
     #Inicializa el historial del chat
-    clear_button = st.sidebar.button("Borrar Conversation", key="clear")
+    clear_button = st.sidebar.button("Borrar Conversación", key="clear")
     if clear_button or "chat_history" not in st.session_state:
         st.session_state["chat_history"] = list()
-        st.session_state["display_history"] = [("", "Buenos días", None)]
+        st.session_state["display_history"] = [("", "", None)]
 
 def print_docs(source_documents):
     for row in source_documents:
