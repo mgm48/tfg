@@ -1,3 +1,4 @@
+DEV_MODE: user ##user or dev, cambia la autorizacion sobre cosas que se pueden hacer
 DEVICE: cpu
 
 TEXT_SPLIT_MODE: default  # default or propositionize

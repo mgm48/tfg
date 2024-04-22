@@ -4,8 +4,6 @@ import streamlit as st
 import speech_recognition as sr
 import pyttsx3
 from PIL import Image
-from langchain_community.callbacks import StreamlitCallbackHandler
-from langchain_core.runnables import RunnableConfig
 
 from src import CFG
 from src.retrieval_qa import build_retrieval_chain
@@ -38,19 +36,17 @@ c = st.container(height=410,border=False)
 c_extra = st.container(height=60,border=False)
 ee = c_extra.empty()
 
-
 if 'texto' not in st.session_state:
     st.session_state['texto'] = ""
 #if "uploaded_filename" not in st.session_state:
     #st.session_state["uploaded_filename"] = ""
 
-
 def init_chat_history():
     #Inicializa el historial del chat
-    clear_button = st.sidebar.button("Clear Conversation", key="clear")
+    clear_button = st.sidebar.button("Borrar Conversation", key="clear")
     if clear_button or "chat_history" not in st.session_state:
         st.session_state["chat_history"] = list()
-        st.session_state["display_history"] = [("", "Hello! How can I help you?", None)]
+        st.session_state["display_history"] = [("", "Buenos días", None)]
 
 def print_docs(source_documents):
     for row in source_documents:
@@ -85,9 +81,9 @@ def grabar_callback():
     try:
         res = r.recognize_google(audio, language='es-ES')
     except sr.UnknownValueError:
-        ee.error("Google Speech Recognition could not understand audio")
+        ee.error("No se ha podido reconocer lo que se ha dicho")
     except sr.RequestError as e:
-        ee.error("Could not request results from Google Speech Recognition service; {0}".format(e))
+        ee.error("Ha habido un error con el servicio de reconocimiento de voz; {0}".format(e))
     else:    
         st.session_state['texto'] = res
 
@@ -127,7 +123,7 @@ def doc_conv_qa():
                 st.warning("Borrando VectorDB existente")
                 delete_vectordb(CFG.VECTORDB_PATH, CFG.VECTORDB_TYPE)
             
-            with st.spinner("Building VectorDB..."):
+            with st.spinner("Construyendo VectorDB..."):
                 perform(
                     build_vectordb,
                     uploaded_file.read(),
