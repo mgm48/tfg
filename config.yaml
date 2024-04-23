@@ -17,6 +17,8 @@ EMBEDDINGS_PATH: all-MiniLM-L6-v2
 VECTORDB_TYPE: chroma
 VECTORDB_PATH: vectordb/chroma
 
+TTS_PATH: src/tmp
+
 # USE_CTRANSFORMERS: True
 # LLM_PATH: llama-2-7b-chat.Q4_K_M.gguf
 # PROMPT_TYPE: llama

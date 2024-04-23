@@ -18,7 +18,7 @@ from src.parser import load_pdf, text_split, propositionize, simple_text_split
 
 
 def build_vectordb(filename: str, embedding_function: Embeddings) -> None:
-    """Builds a vector database from a PDF file."""
+    #Builds a vector database from a PDF file.
     parts = load_pdf(filename)
 
     if CFG.TEXT_SPLIT_MODE == "default":
@@ -38,8 +38,8 @@ def save_vectordb(
     persist_directory: str,
     vectordb_type: str,
 ) -> None:
-    """Saves a vector database to disk."""
-    logger.info(f"Save vectordb to '{persist_directory}'")
+    #Saves a vector database to disk.
+    logger.info(f"Guardando vectordb en directorio '{persist_directory}'")
 
     if vectordb_type == "faiss":
         vectorstore = FAISS.from_documents(docs, embedding_function)
@@ -58,8 +58,8 @@ def save_vectordb(
 
 
 def delete_vectordb(persist_directory: str, vectordb_type: str) -> None:
-    """Deletes vector database."""
-    logger.info(f"Delete vectordb in '{persist_directory}'")
+    #Deletes vector database.
+    logger.info(f"Borrando vectordb en directorio '{persist_directory}'")
     if vectordb_type == "faiss":
         shutil.rmtree(persist_directory)
     elif vectordb_type == "chroma":
@@ -76,10 +76,10 @@ def delete_vectordb(persist_directory: str, vectordb_type: str) -> None:
 def load_faiss(
     embedding_function: Embeddings, persist_directory: Optional[str] = None
 ) -> VectorStore:
-    """Loads a FAISS index from disk."""
+    #Loads a FAISS index from disk.
     if persist_directory is None:
         persist_directory = CFG.VECTORDB_PATH
-    logger.info(f"persist_directory = {persist_directory}")
+    logger.info(f"Usando Faiss, con directorio persistente  = {persist_directory}")
 
     return FAISS.load_local(
         persist_directory, embedding_function, allow_dangerous_deserialization=True
@@ -89,12 +89,12 @@ def load_faiss(
 def load_chroma(
     embedding_function: Embeddings, persist_directory: Optional[str] = None
 ) -> VectorStore:
-    """Loads a Chroma index from disk."""
+    #Loads a Chroma index from disk.
     if persist_directory is None:
         persist_directory = CFG.VECTORDB_PATH
     if not os.path.exists(persist_directory):
         raise FileNotFoundError
-    logger.info(f"persist_directory = {persist_directory}")
+    logger.info(f"Usando Chroma, con directorio persistente = {persist_directory}")
 
     return Chroma(
         collection_name="langchain",

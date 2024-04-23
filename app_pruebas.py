@@ -208,6 +208,8 @@ def doc_conv_qa():
         st.session_state.display_history.append((response["question"], response["answer"], response["source_documents"]))
 
         if tts == "texto + voz":
+            if not os.path.exists(CFG.TTS_PATH):
+                os.mkdir(CFG.TTS_PATH)
             filepath = "./src/tmp/res.wav"
             engine.save_to_file(response["answer"],filepath)
             engine.runAndWait()
