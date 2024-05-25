@@ -23,7 +23,6 @@ dependencies:
   - pdf2image==1.17.0
   - pdfminer.six==20231228
   - opencv-python==4.9.0.80
-
   - soundfile==0.12.1
   - mutagen==1.47.0
   - pygame-ce==2.4.1
@@ -31,5 +30,3 @@ dependencies:
   - SpeechRecognition==3.10.3
   - pyttsx3==2.90
   - pyaudio==0.2.14
-
-  #click==8.1.7

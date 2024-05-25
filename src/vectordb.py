@@ -18,11 +18,10 @@ from src.parser import load_pdf, text_split, propositionize, simple_text_split
 
 
 def build_vectordb(filename: str, embedding_function: Embeddings) -> None:
-    #Builds a vector database from a PDF file.
+    #Construye una base de datos vectorial a partir de documentos
     parts = load_pdf(filename)
 
     if CFG.TEXT_SPLIT_MODE == "default":
-        #docs = text_split(parts)
         docs = simple_text_split(parts, CFG.CHUNK_SIZE, CFG.CHUNK_OVERLAP)
         save_vectordb(docs, embedding_function, CFG.VECTORDB_PATH, CFG.VECTORDB_TYPE)
     elif CFG.TEXT_SPLIT_MODE == "propositionize":
@@ -38,7 +37,7 @@ def save_vectordb(
     persist_directory: str,
     vectordb_type: str,
 ) -> None:
-    #Saves a vector database to disk.
+    #Guarda  nuestra base de datos vectorial
     logger.info(f"Guardando vectordb en directorio '{persist_directory}'")
 
     if vectordb_type == "faiss":

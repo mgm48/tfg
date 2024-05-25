@@ -1,12 +1,6 @@
 DEV_MODE: user ##user or dev, cambia la autorizacion sobre cosas que se pueden hacer
 DEVICE: cpu
 
-TEXT_SPLIT_MODE: default  # default or propositionize
-# propositionize uses propositionizer model
-CHUNK_SIZE: 500
-CHUNK_OVERLAP: 50
-SEPARATORS: ["\n\n", "\n", ". ", " ", ""]
-
 MODELS_DIR: ./models
 
 EMBEDDINGS_PATH: all-MiniLM-L6-v2
@@ -19,21 +13,10 @@ VECTORDB_PATH: vectordb/chroma
 
 TTS_PATH: src/tmp
 
-# USE_CTRANSFORMERS: True
-# LLM_PATH: llama-2-7b-chat.Q4_K_M.gguf
-# PROMPT_TYPE: llama
-
 USE_CTRANSFORMERS: True
-LLM_PATH: mistral-7b-instruct-v0.2.Q4_K_M.gguf
+#LLM_PATH: mistral-7b-instruct-v0.2.Q4_K_M.gguf
+LLM_PATH: mistral-7b-instruct-v0.2.Q5_K_M.gguf
 PROMPT_TYPE: mistral
-
-# USE_CTRANSFORMERS: True
-# LLM_PATH: zephyr-7b-beta.Q4_K_M.gguf
-# PROMPT_TYPE: zephyr
-
-# USE_CTRANSFORMERS: False
-# LLM_PATH: gemma-2b-it-q4_k_m.gguf
-# PROMPT_TYPE: gemma
 
 LLM_CONFIG:
   MAX_NEW_TOKENS: 512
@@ -56,6 +39,13 @@ RERANK_RETRIEVER_CONFIG:
 COMPRESSION_RETRIEVER_CONFIG:
   SEARCH_K: 10
   SIMILARITY_THRESHOLD: 0.5
+
+TEXT_SPLIT_MODE: default  # default or propositionize
+# propositionize uses propositionizer model
+CHUNK_SIZE: 500
+CHUNK_OVERLAP: 50
+SEPARATORS: ["\n\n", "\n", ". ", " ", ""]
+
 
 PROPOSITIONIZER_PATH: propositionizer-wiki-flan-t5-large
 PROPOSITIONIZER_CONFIG:

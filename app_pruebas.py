@@ -76,18 +76,23 @@ def grabar_callback():
             r.adjust_for_ambient_noise(source)
             with ee:
                 with st.spinner('Escuchando lo que dice...'):
-                    audio = r.listen(source)
+                    audio = r.listen(source=source,phrase_time_limit=1000)
                 st.success('Hecho!')  
     try:
         res = r.recognize_google(audio, language='es-ES')
     except sr.UnknownValueError:
-        ee.error("No se ha podido reconocer lo que se ha dicho")
+        ee.error("No se ha podido reconocer ningún mensaje.")
+        st.session_state['texto'] = ""
     except sr.RequestError as e:
         ee.error("Ha habido un error con el servicio de reconocimiento de voz; {0}".format(e))
-    else:    
+        st.session_state['texto'] = ""
+    else:
+        ee.success("Se ha reconocido el siguiente mensaje. Puede editar su mensaje usando el teclado.")    
         st.session_state['texto'] = res
+    ee.empty()
 
 def borrar_callback():
+    ##Hacer un backup por si quiero hacer un undo
     st.session_state['texto'] = ""
 
 
@@ -129,12 +134,22 @@ def doc_conv_qa():
                         embedding_function=BASE_EMBEDDINGS,
                     )
                     load_vectordb.clear()
+    
+                if not os.path.exists(CFG.VECTORDB_PATH):
+                    st.info("Se debe construir el VectorDB primero.")
+                    st.stop()
+
         if dev == "user":
             uploaded_file = "./data/franwiki.pdf"
-        
-        if not os.path.exists(CFG.VECTORDB_PATH):
-            st.info("Se debe construir el VectorDB primero.")
-            st.stop()
+            if not os.path.exists(CFG.VECTORDB_PATH):
+                st.info("Se debe construir el VectorDB primero.")
+                perform(
+                        build_vectordb,
+                        uploaded_file.read(),
+                        embedding_function=BASE_EMBEDDINGS,
+                    )
+                load_vectordb.clear()
+
 
         try:
             with st.status("Carga de datos", expanded=False) as status:
@@ -170,7 +185,7 @@ def doc_conv_qa():
 
     c1,c2 = st.columns([9,1])
     with c2:
-        grabar = st.button("Grabar",help="Graba con un micrófono lo que quieras preguntarle a la IA",on_click=grabar_callback)
+        grabar = st.button("Grabar",help="Graba con un micrófono lo que quieras preguntarle a la IA.\nLa grabación parará de manera automática cuando deje de hablar.",on_click=grabar_callback)
         borrar = st.button("Borrar",help="Borra el contenido de la ventana de texto.",on_click=borrar_callback)
 
     with c1:
