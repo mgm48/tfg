@@ -2,14 +2,16 @@ import pygame
 import time
 import os
 import asyncio
+import pyttsx3
 import soundfile as sf
 from mutagen.mp3 import MP3
 
 class AudioManager:
 
+    
+
     def __init__(self):
-        # Use higher frequency to prevent audio glitching noises
-        # Use higher buffer because why not (default is 512)
+        self.engine = pyttsx3.init()
         pygame.mixer.init(frequency=48000, buffer=1024) 
 
     def play_audio(self, file_path, sleep_during_playback=True, delete_file=False, play_using_music=True):
@@ -61,85 +63,32 @@ class AudioManager:
                 except PermissionError:
                     print(f"Couldn't remove {file_path} because it is being used by another process.")
 
-    async def play_audio_async(self, file_path):
-        """
-        Parameters:
-        file_path (str): path to the audio file
-        """
-        print(f"Playing file with asynchronously with pygame: {file_path}")
-        if not pygame.mixer.get_init(): # Reinitialize mixer if needed
-            pygame.mixer.init(frequency=48000, buffer=1024) 
-        pygame_sound = pygame.mixer.Sound(file_path) 
-        pygame_sound.play()
 
-        # Calculate length of the file, based on the file format
-        _, ext = os.path.splitext(file_path) # Get the extension of this file
-        if ext.lower() == '.wav':
-            wav_file = sf.SoundFile(file_path)
-            file_length = wav_file.frames / wav_file.samplerate
-            wav_file.close()
-        elif ext.lower() == '.mp3':
-            mp3_file = MP3(file_path)
-            file_length = mp3_file.info.length
-        else:
-            print("Cannot play audio, unknown file type")
-            return
+    def config_tts(self,v=0, rate=200,vol=0.7,show_voices_info=False):
+        voices = self.engine.getProperty('voices')
+        self.engine.setProperty('rate', rate)     # setting up new voice rate
+        self.engine.setProperty('volume',vol)   # setting up volume   
+        self.engine.setProperty('voice', voices[v].id) # setting voice 
+        
+        if show_voices_info:
+            i = 0
+            for voice in voices:
+                print("Number:",i)
+                print("Voice:",voice.name)
+                print(" - ID:",voice.id)
+                print(" - Languages:",voice.languages)
+                print(" - Gender:",voice.gender)
+                print(" - Age:",voice.age)
+                print("\n")
+                i+=1
 
-        # We must use asyncio.sleep() here because the normal time.sleep() will block the thread, even if it's in an async function
-        await asyncio.sleep(file_length)
+    def play_tts(self, path, response):
+            filepath = "./" + path + "/res.wav"
+            self.engine.save_to_file(response,filepath)
+            self.engine.runAndWait()
+            self.play_audio(filepath, delete_file=True)
 
 
-# TESTS
-if __name__ == '__main__':
-    audio_manager = AudioManager()
-    MP3_FILEPATH = "TestAudio_MP3.mp3"
-    WAV_FILEPATH = "TestAudio_WAV.wav"
 
-    if not os.path.exists(MP3_FILEPATH) or not os.path.exists(WAV_FILEPATH):
-        exit("Missing test audio")
-    
-    # MP3 Test
-    audio_manager.play_audio(MP3_FILEPATH)
-    print("Sleeping until next file")
-    time.sleep(3)
 
-    # Lots of MP3s at once test
-    x = 10
-    while x > 0:
-        audio_manager.play_audio(MP3_FILEPATH,False,False,False)
-        time.sleep(0.1)
-        x -= 1
-    print("Sleeping until next file")
-    time.sleep(3)
-
-    # Wav file tests
-    audio_manager.play_audio(WAV_FILEPATH)
-    print("Sleeping until next file")
-    time.sleep(3)
-
-    # Lots of WAVs at once test
-    x = 10
-    while x > 0:
-        audio_manager.play_audio(WAV_FILEPATH,False,False,False)
-        time.sleep(0.1)
-        x -= 1
-    print("Sleeping until next file")
-    time.sleep(3)
-
-    # Async tests
-    async def async_audio_test():
-        await audio_manager.play_audio_async(MP3_FILEPATH)
-        time.sleep(1)
-        await audio_manager.play_audio_async(WAV_FILEPATH)
-        time.sleep(1)
-    print("Playing async audio")
-    asyncio.run(async_audio_test())
-
-    # Deleting file tests
-    # audio_manager.play_audio(MP3_FILEPATH, True, True)
-    # print("Sleeping until next file")
-    # time.sleep(3)
-    # audio_manager.play_audio(WAV_FILEPATH, True, True)
-    # print("Sleeping until next file")
-    # time.sleep(3)
     

@@ -11,7 +11,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 try:
-    logger.info("Reading config.yaml")
+    logger.info("Leyendo config.yaml")
     with open("config.yaml", "r") as f:
         CFG = box.Box(yaml.safe_load(f))
 
