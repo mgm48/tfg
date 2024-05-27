@@ -11,7 +11,6 @@ VECTORDB_PATH: vectordb/chroma
 TTS_PATH: src/tmp
 
 USE_CTRANSFORMERS: True
-#LLM_PATH: mistral-7b-instruct-v0.2.Q4_K_M.gguf
 LLM_PATH: mistral-7b-instruct-v0.2.Q5_K_M.gguf
 PROMPT_TYPE: mistral
 

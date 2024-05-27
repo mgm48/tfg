@@ -208,10 +208,9 @@ def doc_conv_qa():
                 st.markdown(user_query)
             with ee:
                 with st.spinner('Obteniendo respuesta de la IA...'):
-                    response = {"question": user_query, "answer": "Buenos días, mi nombre es Francisco de Arobe, un placer.","source_documents": "-"}
-                    #response = retrieval_chain.invoke({
-                        #"question": user_query,
-                        #"chat_history": st.session_state.chat_history,},)
+                    response = retrieval_chain.invoke({
+                        "question": user_query,
+                        "chat_history": st.session_state.chat_history,},)
                     
                 st.success('Respuesta obtenida.') 
                 
