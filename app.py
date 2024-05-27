@@ -14,7 +14,10 @@ from src.audio_player import AudioManager
 st.set_page_config(page_title="Conversación con Don Francisco de Arobe",layout="wide")
 user_mode = CFG.DEV_MODE
 
+LLM = load_llm()
+RERANKER = load_reranker()
 BASE_EMBEDDINGS = load_base_embeddings()
+
 @st.cache_resource
 def load_vectordb():
     if CFG.VECTORDB_TYPE == "faiss":
@@ -40,7 +43,7 @@ def clear_callback():
     st.session_state["chat_history"] = list()
     
 def restaut_callback():
-    if st.session_state["backup_history"]:
+    if st.session_state["backup"]:
         if not st.session_state["chat_history"]:
             st.session_state["chat_history"] = st.session_state["backup"] 
         else:
@@ -55,8 +58,9 @@ def init_chat_history():
         help="Restaura el ultimo historial borrado, añadiendo las nuevas consultas que se haya hecho desde entonces.",on_click=restaut_callback)
     if "chat_history" not in st.session_state:
         st.session_state["chat_history"] = list()
-        st.session_state["backup"] = list()
         st.session_state["display_history"] = [("", "", None)]
+    if "backup" not in st.session_state:
+        st.session_state["backup"] = list()
 
 
 
@@ -118,22 +122,7 @@ def dev_mode():
                 st.info("Se debe construir el VectorDB primero.")
                 st.stop()
 
-        try:
-            with st.status("Carga de datos", expanded=False) as status:
-                LLM = load_llm()
-                st.write("LLM: Carga Completada.")
-                RERANKER = load_reranker()
-                st.write("Reranker: Carga Completada.")
-                vectordb = load_vectordb()
-                st.write("VectorDB: Carga Completada.")
-                retrieval_chain = build_retrieval_chain(vectordb, RERANKER, LLM)
-                st.write("Cadena de Recuperación: Carga Completada.")
-                status.update(
-                    label="Sistema de IA: Carga Completada.", expanded=False
-                )
-        except Exception:
-            st.error("La carga del Sistema de IA ha encontrado un error.")
-            st.stop()
+        
 
 
 def doc_conv_qa():
@@ -166,15 +155,18 @@ def doc_conv_qa():
                     )
                 load_vectordb.clear()
 
-            try:
-                LLM = load_llm()
-                RERANKER = load_reranker()
+        try:
+            with st.status("Carga de datos", expanded=False) as status:
                 vectordb = load_vectordb()
+                st.write("VectorDB: Carga Completada.")
                 retrieval_chain = build_retrieval_chain(vectordb, RERANKER, LLM)
-                ee.success("Sistema de Inteligencia Artificial: Carga Completada.")    
-            except Exception:
-                st.error("La carga del Sistema de IA ha encontrado un error.")
-                st.stop()
+                st.write("Cadena de Recuperación: Carga Completada.")
+                status.update(
+                    label="Sistema de IA: Carga Completada.", expanded=False
+                )
+        except Exception:
+            st.error("La carga del Sistema de IA ha encontrado un error.")
+            st.stop()
 
 
     st.sidebar.write("---")
@@ -228,12 +220,11 @@ def doc_conv_qa():
                 st.markdown(response["answer"])
 
         st.session_state.chat_history.append((response["question"], response["answer"]))
-        st.session_state.display_history.append((response["question"], response["answer"], response["source_documents"]))
 
         if tts == "texto + voz":
             if not os.path.exists(CFG.TTS_PATH):
                 os.mkdir(CFG.TTS_PATH)
-            audio_manager().play_tts(CFG.TTS_PATH,response["answer"])
+            audio_manager.play_tts(CFG.TTS_PATH,response["answer"])
 
 
 

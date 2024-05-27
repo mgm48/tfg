@@ -1,15 +1,13 @@
 # TFG Marta Gago Macías
+Debe ejecutar los siguientes comandos en el programa anaconda prompt.
+dir representa el directorio local donde se ha extraido el repositorio seguido por el nombre del mismo
+ejemplo: cd C:\hlocal\tfg
 ```bash
-cd C:\hlocal\tfg
+cd dir
 conda activate tfg
-streamlit run app_name.py
+streamlit run app.py
 ```
 
-```bash
-conda env create --name rag python=3.11
-conda activate rag
-pip install -r requirements.txt
-```
 
 ## INSTRUCCIONES PARA EJECUCIÓN:
 
@@ -31,6 +29,10 @@ Activar y desactivar el environment:
 conda activate tfg
 conda deactivate tfg
 ```
+
+### MODELOS IA
+
+Quantized models can be downloaded from [TheBloke](https://huggingface.co/TheBloke).
 
 
 
